@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import styles from './Item.module.scss'
 import {
     AiOutlineHeart,
@@ -6,32 +7,43 @@ import {
 import {
     FaCartPlus
 } from 'react-icons/fa'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { mudarCarrinho } from 'store/reducers/carrinho'
 import { mudarFavorito } from 'store/reducers/itens'
 
-export default function Item(props) {
-    const dispatch = useDispatch()
-    const iconeProps = {
-        size: 24,
-        color: '#041833',
-    }
+const iconeProps = {
+    size: 24,
+    color: '#041833',
+}
 
+export default function Item(props) {
     const {
         titulo,
         foto,
         preco,
         descricao,
         favorito,
-        id
+        id,
+        carrinho
     } = props
+
+
+    const dispatch = useDispatch()
+    const estaNoCarrinho = useSelector(state => state.carrinho.some(itemNoCarrinho => itemNoCarrinho.id === id))
+
 
     function resolverFavorito() {
         dispatch(mudarFavorito(id));
     }
 
+    function resolverCarrinho() {
+        dispatch(mudarCarrinho(id));
+    }
 
     return (
-        <div className={styles.item}>
+        <div className={classNames(styles.item, {
+            [styles.itemNoCarrinho]: carrinho
+        })}>
             <div className={styles['item-imagem']}>
                 <img src={foto} alt={titulo} />
             </div>
@@ -48,7 +60,7 @@ export default function Item(props) {
                     <div className={styles['item-preco']}>
                         R$ {preco.toFixed(2)}
                     </div>
-                    <div className={styles['item=acoes']}>
+                    <div className={styles['item-acoes']}>
                         {
                             favorito
                                 ? <AiFillHeart {...iconeProps} color='#FF0000' className={styles['item-acao']} onClick={resolverFavorito} />
@@ -56,8 +68,9 @@ export default function Item(props) {
                         }
                         <FaCartPlus
                             {...iconeProps}
-                            color={true ? '#1875E8' : iconeProps.color}
+                            color={estaNoCarrinho ? '#1875E8' : iconeProps.color}
                             className={styles['item-acao']}
+                            onClick={resolverCarrinho}
                         />
                     </div>
                 </div>

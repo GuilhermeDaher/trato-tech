@@ -1,3 +1,4 @@
+import Carrinho from "Pages/Carrinho";
 import Categoria from "Pages/Categoria";
 import Home from "Pages/Home";
 import PaginaPadrao from "components/PaginaPadrao";
@@ -10,6 +11,7 @@ export default function Router() {
                 <Route path="/" element={<PaginaPadrao />}>
                     <Route index element={<Home />} />
                     <Route index path="/categoria/:nomeCategoria" element={<Categoria />} />
+                    <Route index path="/carrinho" element={<Carrinho />} />
                 </Route>
             </Routes>
         </BrowserRouter>
